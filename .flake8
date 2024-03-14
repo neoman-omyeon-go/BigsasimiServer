@@ -1,0 +1,16 @@
+[flake8]
+exclude = 
+  .git,
+  .gitignore,
+  *.pot,
+  *.py[co],
+  __pycache__,
+  venv,
+  .env
+  ./config/settings/*
+ignore = E203, E266, E501, W503
+
+max-line-length = 200
+inline-quotes = "
+no-accept-encodings = True
+exit-zero = False
