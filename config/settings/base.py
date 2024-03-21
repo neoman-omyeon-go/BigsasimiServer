@@ -40,6 +40,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -65,15 +73,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES_SELECT = {
-    'postgres': {
+    'postgres': { # 컨테이너 버전
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mydb',
         'USER': 'myuser',
         'PASSWORD': '1q2w3e4r',
-        'HOST': 'postgres',
+        'HOST': 'dbserver',
         'PORT': '5432',
     },
-    'local_postgres': {
+    'local_postgres': { # 완전 로컬 버전
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mydb',
         'USER': 'myuser', 
@@ -81,7 +89,7 @@ DATABASES_SELECT = {
         'HOST': 'localhost',
         'PORT': '5432',
     },
-    'sqlite3': {
+    'sqlite3': { #ㄹㅇ 원시 테스트
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }

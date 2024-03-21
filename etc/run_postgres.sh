@@ -1,10 +1,20 @@
 #!/bin/bash
 
+NETWORK_NAME="test_net"
+
+if [[ ! "$(docker network ls -q -f name=$NETWORK_NAME)" ]]; then
+    echo "도커 네트워크 생성: $NETWORK_NAME"
+    docker network create $NETWORK_NAME
+else
+    echo "도커 네트워크 '$NETWORK_NAME' 이미 존재합니다."
+fi
+
 POSTGRESQL_DIR=$(pwd)/data/postgres13a
 echo "PostgreSQL 데이터 디렉토리 경로: $POSTGRESQL_DIR"
 
 docker run -d \
   --name dbserver \
+  --network test_net \
   -e POSTGRES_DB=mydb \
   -e POSTGRES_USER=myuser \
   -e POSTGRES_PASSWORD=1q2w3e4r \

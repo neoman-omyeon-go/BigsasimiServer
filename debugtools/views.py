@@ -8,13 +8,19 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
 
+from rest_framework.permissions import AllowAny
 
 class test_index(APIView):
+    permission_classes = [AllowAny]
+    
+    def get_queryset(self):
+        return Blog.objects.all()
+    
     def get(self, request):
         print(request.data)
 
-        blogs = Blog.objects.all()
-        data = {'data' : BlogSerializer(blogs, many=True).data}
+        blogs = self.get_queryset()
+        data = {'data': BlogSerializer(blogs, many=True).data}
         if request.GET.get('json', False):
             return JsonResponse()
         else:
