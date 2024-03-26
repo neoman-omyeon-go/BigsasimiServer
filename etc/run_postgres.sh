@@ -13,7 +13,7 @@ POSTGRESQL_DIR=$(pwd)/data/postgres13a
 echo "PostgreSQL 데이터 디렉토리 경로: $POSTGRESQL_DIR"
 
 docker run -d \
-  --name dbserver \
+  --name postgres \
   --network test_net \
   -e POSTGRES_DB=mydb \
   -e POSTGRES_USER=myuser \

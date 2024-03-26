@@ -78,7 +78,7 @@ DATABASES_SELECT = {
         'NAME': 'mydb',
         'USER': 'myuser',
         'PASSWORD': '1q2w3e4r',
-        'HOST': 'dbserver',
+        'HOST': 'postgres', # 컨테이너에 따라 적절히 변경 필요!
         'PORT': '5432',
     },
     'local_postgres': { # 완전 로컬 버전

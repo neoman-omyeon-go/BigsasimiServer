@@ -22,7 +22,7 @@ class test_index(APIView):
         blogs = self.get_queryset()
         data = {'data': BlogSerializer(blogs, many=True).data}
         if request.GET.get('json', False):
-            return JsonResponse()
+            return JsonResponse(data)
         else:
             return Response(data)
 
