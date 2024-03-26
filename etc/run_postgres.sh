@@ -2,7 +2,7 @@
 
 NETWORK_NAME="test_net"
 
-if [[ ! "$(docker network ls -q -f name=$NETWORK_NAME)" ]]; then
+if [ ! "$(docker network ls -q -f name=$NETWORK_NAME)" ]; then
     echo "도커 네트워크 생성: $NETWORK_NAME"
     docker network create $NETWORK_NAME
 else
@@ -21,3 +21,8 @@ docker run -d \
   -p 5432:5432 \
   -v $POSTGRESQL_DIR/data/postgres13a:/var/lib/postgres/data \
   postgres:13-alpine
+
+cd ..
+
+docker build --tag bigsasimi-django:v0.1 .  
+docker run -d --name django -p 8000:8000 --network test_net bigsasimi-django:v0.1

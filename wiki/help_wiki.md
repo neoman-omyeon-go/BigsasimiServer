@@ -10,4 +10,4 @@ psql -U myuser -d mydb -W
 cd etc & sh run run_postgres
 docker network create test_net       
 docker build --tag bigsasimi-django:v0.1 .  
-docker run -d --name django -p 8000:8000 --network test_net bigsasimi-django:v0.1 .
+docker run -d --name django -p 8000:8000 --network test_net bigsasimi-django:v0.1
