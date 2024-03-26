@@ -6,6 +6,4 @@ DATABASES = {
     'default': DATABASES_SELECT['postgres']
 }
 
-STATICFILES_DIRS = [
-    STATIC_DIR
-]
+STATIC_ROOT = None

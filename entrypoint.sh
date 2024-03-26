@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo "a"
+echo "python3 manage.py makemigrations"
 python3 manage.py makemigrations
-echo "b"
+echo "python3 manage.py migrate"
 python3 manage.py migrate
-echo "c"
+echo "gunicorn -b 0.0.0.0:8000 config.wsgi:application"
 gunicorn -b 0.0.0.0:8000 config.wsgi:application

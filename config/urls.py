@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
-from django.conf import settings
+from .settings.base import STATIC_DIR, STATIC_URL
 from django.views.static import serve
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -9,8 +10,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
 ]
 
-# wtf!!!
-# if settings.DEBUG is False:
-#     urlpatterns += [
-#         re_path(r'^{{static/}}/(?P<path>.*)$', serve, {'document_root': settings.STATIC_DIR}),
-#     ]
+# wtf!!! ++++++ need static file location
+urlpatterns += static(STATIC_URL, document_root=STATIC_DIR)
