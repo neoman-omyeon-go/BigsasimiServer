@@ -1,13 +1,15 @@
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from .settings.base import STATIC_DIR, STATIC_URL
-from django.views.static import serve
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('debugtools.urls')),
-    path('api-auth/', include('rest_framework.urls')),
+    # path('api-auth/', include('rest_framework.urls')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 # wtf!!! ++++++ need static file location
