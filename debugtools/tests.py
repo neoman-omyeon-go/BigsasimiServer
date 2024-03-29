@@ -7,8 +7,10 @@ class Test(TestCase):
         self.client = APIClient()
 
     def test_funtion(self):
-        x = self.client.get('/test')
-        self.assertEqual(x.status_code, 301)
+        x = self.client.get('/test/')
+        self.assertEqual(x.status_code, 200)
+        x = self.client.get('/test/?json=ture')
+        self.assertEqual(x.status_code, 200)
 
     def test_success(self):
         a = 1

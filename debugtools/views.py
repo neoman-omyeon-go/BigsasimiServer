@@ -21,8 +21,6 @@ class test_index(APIView):
         return Blog.objects.all()
 
     def get(self, request):
-        print(request.COOKIES)
-
         blogs = self.get_queryset()
         data = {'data': BlogSerializer(blogs, many=True).data}
         if request.GET.get('json', False):
