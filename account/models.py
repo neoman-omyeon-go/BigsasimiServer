@@ -1,14 +1,15 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField  
+from django.contrib.postgres.fields import ArrayField
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+
 
 class UserType(object):
     REGULAR_USER = "Regular User"
     ADMIN = "Admin"
     SUPER_ADMIN = "Super Admin"
 
-    
+
 class User(AbstractUser):
     """
     username, email, password
@@ -28,7 +29,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = []
-    
+
     grass = ArrayField(models.DateTimeField(), blank=True, default=list)
 
     last_activity = models.DateTimeField(null=True)
@@ -53,17 +54,3 @@ class UserProfile(models.Model):
 
     class Meta:
         db_table = "user_profile"
-
-### testing...
-class BlogPost(models.Model):
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    published_date = models.DateTimeField(auto_now_add=True)
-    
-class Comment(models.Model):
-    post = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
-    text = models.TextField()
-    
-class Tag(models.Model):
-    name = models.CharField(max_length=30)
-    posts = models.ManyToManyField(BlogPost)

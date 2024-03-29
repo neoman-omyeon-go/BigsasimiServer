@@ -1,6 +1,5 @@
 from django.urls import path
 from .views import UserRegister, UserLogin, UserLogout
-from django.conf.urls import include
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 urlpatterns = [

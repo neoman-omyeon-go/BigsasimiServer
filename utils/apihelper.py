@@ -1,5 +1,5 @@
 import functools
-from django.http import JsonResponse
+
 
 def validate_serializer(serializer):
     '''data checker'''
@@ -19,6 +19,7 @@ def validate_serializer(serializer):
         return handle
 
     return validate
+
 
 def FormatResponse(data=None):
     return {"error": None, "data": data}

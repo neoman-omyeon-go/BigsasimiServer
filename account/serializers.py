@@ -14,15 +14,16 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data.get('password'))
         user.save()
         return user
-    
+
     class Meta:
         model = User
         fields = '__all__'
 
+
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
-    
+
     def authenticate_user(self) -> User:
         if self.is_valid():
             username = self.validated_data.get('username')

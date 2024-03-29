@@ -1,4 +1,3 @@
-from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserSerializer, UserLoginSerializer
@@ -23,6 +22,7 @@ class UserRegister(APIView):
             return JsonResponse(serializer.data)
         return JsonResponse(serializer.errors)
 
+
 class UserLogin(APIView):
     # 유저 정보 확인
     def get(self, request):
@@ -34,8 +34,8 @@ class UserLogin(APIView):
             user = User.objects.get(pk=pk)
             serializer = UserSerializer(instance=user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-    
-        except(jwt.exceptions.ExpiredSignatureError):
+
+        except (jwt.exceptions.ExpiredSignatureError):
             # 토큰 만료 시 토큰 갱신
             serializer = TokenRefreshSerializer(data={'refresh': request.COOKIES.get('refresh', None)})
             try:
@@ -50,30 +50,22 @@ class UserLogin(APIView):
                     res = Response(result, status=status.HTTP_200_OK)
                     res.set_cookie('access', access, httponly=True)
                     return res
+
             except Exception as e:
                 print(e)
                 raise jwt.exceptions.InvalidTokenError
-            
-            refresh_token = request.COOKIES.get('refresh', 'None')
-            data = {"refresh": refresh_token}
-            serializer = self.get_serializer(data= data)
 
-            try:
-                serializer.is_valid(raise_exception= True)
-            except:
-                raise jwt.exceptions.InvalidTokenError
-
-        except(jwt.exceptions.InvalidTokenError):
+        except (jwt.exceptions.InvalidTokenError):
             # 사용 불가능한 토큰일 때
-            return Response({"msg":"invaild token"},status=status.HTTP_400_BAD_REQUEST)
-        
-        except:
-            return Response({"msg":"토큰없음"},status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response({"msg":"invaild token"}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception:
+            return Response({"msg":"토큰없음"}, status=status.HTTP_400_BAD_REQUEST)
+
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
         user = serializer.authenticate_user()
-        
+
         if user:
             refresh = RefreshToken.for_user(user=user)
             response = {
@@ -86,6 +78,7 @@ class UserLogin(APIView):
             return result
         else:
             return Response({"msg" : "user miss match"})
+
 
 class UserLogout(APIView):
     def get(self, request):
