@@ -8,7 +8,7 @@ exclude =
   venv,
   .env
   ./config/settings/*
-ignore = E203, E266, E501, W503
+ignore = E203, E266, E501, W503, E231
 
 max-line-length = 200
 inline-quotes = "

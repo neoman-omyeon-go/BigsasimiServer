@@ -8,5 +8,5 @@ if (os.environ.get('_HOW') == 'prod'):
 else:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')
     print('local')
-    
+
 application = get_wsgi_application()
