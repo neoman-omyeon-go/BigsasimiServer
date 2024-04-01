@@ -32,7 +32,7 @@ INSTALLED_APPS = [
 ]
 
 ### Add to pip install module 
-INSTALLED_APPS+=['rest_framework','rest_framework_simplejwt', 'rest_framework_simplejwt.token_blacklist',]
+INSTALLED_APPS+=['rest_framework','rest_framework_simplejwt',]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -158,6 +158,7 @@ AVATAR_UPLOAD_DIR = f"{STATIC_DIR}{AVATAR_URI_PREFIX}"
 ### jwt
 from datetime import timedelta
 
+REST_USE_JWT = True
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -181,7 +182,8 @@ SIMPLE_JWT = {
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
-    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+    # 'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+    'TOKEN_USER_CLASS': 'account.User',
 
     'JTI_CLAIM': 'jti',
 

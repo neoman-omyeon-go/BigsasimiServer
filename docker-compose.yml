@@ -16,7 +16,7 @@ services:
   was:
     build: .
     container_name: was
-    # command: python manage.py runserver 0:8000
+    # command: ["bash", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
     # command: ["gunicorn", "-b", "0.0.0.0:8000", "config.wsgi:application"]
     command: ["sh", "./entrypoint.sh"]
     volumes:
