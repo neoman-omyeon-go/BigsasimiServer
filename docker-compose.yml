@@ -14,7 +14,8 @@ services:
         - "5432:5432"
 
   was:
-    build: .
+    # build: .
+    image: rlawlgh001028/bigsasimi-django:latest
     container_name: was
     # command: ["bash", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
     # command: ["gunicorn", "-b", "0.0.0.0:8000", "config.wsgi:application"]
