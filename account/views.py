@@ -16,7 +16,9 @@ from .models import User
 
 class UserRegister(APIView):
     def post(self, request):
+        print(request.data)
         serializer = UserSerializer(data=request.data)
+        print(serializer.username, serializer.password)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data)
@@ -63,6 +65,7 @@ class UserLogin(APIView):
             return Response({"msg":"토큰없음"}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
+        print(request.data)
         serializer = UserLoginSerializer(data=request.data)
         user = serializer.authenticate_user()
 
