@@ -8,7 +8,7 @@ from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework import status
 from config.settings.base import SECRET_KEY
 
-# from ..utils.apihelper import FormatResponse
+from utils.apihelper import FormatResponse, login_required
 
 # model
 from .models import User
@@ -16,14 +16,19 @@ from .models import User
 
 class UserRegister(APIView):
     def post(self, request):
-        print(request.data)
+        print("Register Info : ",request.data)
         serializer = UserSerializer(data=request.data)
-        print(serializer.username, serializer.password)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors)
-
+            return JsonResponse(FormatResponse(data=serializer.data))
+        
+        if serializer.errors.get("username", None):
+            return JsonResponse(FormatResponse(msg="id already exists",),status=status.HTTP_400_BAD_REQUEST)
+            
+        return JsonResponse(FormatResponse(error="error",
+                                           msg=serializer.error_messages,
+                                           data=serializer.errors),
+                            status = status.HTTP_400_BAD_REQUEST)
 
 class UserLogin(APIView):
     # 유저 정보 확인
@@ -35,7 +40,7 @@ class UserLogin(APIView):
             pk = payload.get('user_id')
             user = User.objects.get(pk=pk)
             serializer = UserSerializer(instance=user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return JsonResponse(serializer.data, status=status.HTTP_200_OK)
 
         except (jwt.exceptions.ExpiredSignatureError):
             # 토큰 만료 시 토큰 갱신
@@ -49,7 +54,7 @@ class UserLogin(APIView):
                     user = User.objects.get(id=pk)
                     serializer = UserSerializer(user)
                     result = {"msg":"토큰 재발급 완료", "user":serializer.data}
-                    res = Response(result, status=status.HTTP_200_OK)
+                    res = JsonResponse(FormatResponse(msg="token is refreshed",data=result))
                     res.set_cookie('access', access, httponly=True)
                     return res
 
@@ -59,13 +64,12 @@ class UserLogin(APIView):
 
         except (jwt.exceptions.InvalidTokenError):
             # 사용 불가능한 토큰일 때
-            return Response({"msg":"invaild token"}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse(FormatResponse(error="error", msg="invaild token"), status=status.HTTP_400_BAD_REQUEST)
 
         except Exception:
-            return Response({"msg":"토큰없음"}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse(FormatResponse(error="error", msg="is not contain token"), status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
-        print(request.data)
         serializer = UserLoginSerializer(data=request.data)
         user = serializer.authenticate_user()
 
@@ -75,19 +79,16 @@ class UserLogin(APIView):
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
             }
-            result = Response(response)
+            result = JsonResponse(FormatResponse(msg="Login success",data=response))
             result.set_cookie("access", response["access"], httponly=True)
             result.set_cookie("refresh", response["refresh"], httponly=True)
             return result
         else:
-            return Response({"msg" : "user miss match"})
-
+            return JsonResponse(FormatResponse(error="error", msg="user miss match"), status=status.HTTP_400_BAD_REQUEST)
 
 class UserLogout(APIView):
     def get(self, request):
-        response = Response({
-            "message" : "프론트에서 토큰 삭제 하세용~"
-        })
+        response = JsonResponse(FormatResponse(msg="프론트에서 토큰 삭제 하세용~"))
         response.delete_cookie("access")
         response.delete_cookie("refresh")
         return response

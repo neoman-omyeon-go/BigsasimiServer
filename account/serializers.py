@@ -28,6 +28,7 @@ class UserLoginSerializer(serializers.Serializer):
         if self.is_valid():
             username = self.validated_data.get('username')
             password = self.validated_data.get('password')
+            print(self.validated_data)
             user = authenticate(username=username, password=password)
             return user
         else:

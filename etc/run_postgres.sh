@@ -24,5 +24,5 @@ docker run -d \
 
 cd ..
 
-docker build --tag bigsasimi-django:v0.1 .  
-docker run -d --name django -p 8000:8000 --network test_net bigsasimi-django:v0.1
+# docker build --tag bigsasimi-django:v0.1 .  
+# docker run -d --name django -p 8000:8000 --network test_net bigsasimi-django:v0.1
