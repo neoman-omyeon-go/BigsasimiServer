@@ -1,4 +1,3 @@
-from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserSerializer, UserLoginSerializer
 from rest_framework.views import APIView
@@ -8,7 +7,7 @@ from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework import status
 from config.settings.base import SECRET_KEY
 
-from utils.apihelper import FormatResponse, login_required
+from utils.apihelper import FormatResponse
 
 # model
 from .models import User
@@ -21,14 +20,15 @@ class UserRegister(APIView):
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(FormatResponse(data=serializer.data))
-        
+
         if serializer.errors.get("username", None):
             return JsonResponse(FormatResponse(msg="id already exists",),status=status.HTTP_400_BAD_REQUEST)
-            
+
         return JsonResponse(FormatResponse(error="error",
                                            msg=serializer.error_messages,
                                            data=serializer.errors),
-                            status = status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserLogin(APIView):
     # 유저 정보 확인
@@ -85,6 +85,7 @@ class UserLogin(APIView):
             return result
         else:
             return JsonResponse(FormatResponse(error="error", msg="user miss match"), status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserLogout(APIView):
     def get(self, request):

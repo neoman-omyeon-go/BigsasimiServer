@@ -13,8 +13,8 @@ from django.shortcuts import render
 # from rest_framework.permissions import AllowAny, IsAuthenticated
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 
-#etc
-from utils.apihelper import FormatResponse, login_required
+# etc
+from utils.apihelper import login_required
 from account.serializers import UserSerializer
 
 
