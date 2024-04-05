@@ -20,9 +20,9 @@ class Test(TestCase):
         assert (a + b == 2)
 
     def test_ResponseValue(self):
-        rawdata = {"a":1, "b":1.1234567890, "c":dict("1":1234)}
+        rawdata = {"a":1, "b":1.1234567890, "c":{"1":1234}}
         a = FJR(error="error", msg="test test\n\0%%$", data=rawdata, status=status.HTTP_202_ACCEPTED)
         b = JsonResponse(FormatResponse(error="error", msg="test test\n\0%%$", data=rawdata), status=status.HTTP_202_ACCEPTED)
         assert ((a is b) == False)
-        # assert (a.content == b.content)
+        assert (a.content == b.content)
         
