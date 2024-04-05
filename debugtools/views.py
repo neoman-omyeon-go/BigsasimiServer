@@ -10,13 +10,15 @@ from django.http import JsonResponse
 from django.shortcuts import render
 
 # autentication
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
+# from rest_framework.permissions import AllowAny, IsAuthenticated
+# from rest_framework_simplejwt.authentication import JWTAuthentication
+
+# etc
+from utils.apihelper import login_required
+from account.serializers import UserSerializer
 
 
 class test_index(APIView):
-    permission_classes = [AllowAny]
-
     def get_queryset(self):
         return Blog.objects.all()
 
@@ -39,8 +41,6 @@ class test_index(APIView):
 
 
 class test_detail(APIView):
-    permission_classes = [AllowAny]
-
     def get_queryset(self, pk):
         return Blog.objects.get(id=pk)
 
@@ -66,17 +66,13 @@ class test_detail(APIView):
 
 
 class test_JWT_authentication(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-
+    @login_required
     def get(self, request):
         user = request.user
+        result = UserSerializer(user)
         print(f"유저 : {user}")
 
-        if not user:
-            return Response({"error": "접근 권한이 없습니다."})
-
-        return Response({"message": "Accepted"})
+        return Response(result.data)
 
 
 class test_open_view(APIView):

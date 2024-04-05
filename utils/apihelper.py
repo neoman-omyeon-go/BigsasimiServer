@@ -1,5 +1,12 @@
 import functools
 
+# http
+from rest_framework import status
+from django.http import JsonResponse
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 
 def validate_serializer(serializer):
     '''data checker'''
@@ -21,5 +28,47 @@ def validate_serializer(serializer):
     return validate
 
 
-def FormatResponse(data=None):
-    return {"error": None, "data": data}
+def FormatResponse(error:str=None, msg:str=None, data:dict=None) -> dict:
+    return {"error": error, "msg":msg, "data": data}
+
+
+def FJR(error:str=None, msg:str=None, data:dict=None, status=status.HTTP_200_OK):
+    """Formatting Json Response"""
+    r = {"error": error, "msg":msg, "data": data}
+    return JsonResponse(r, status=status)
+
+
+class BasePermissionDecorator(object):
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, obj, obj_type):
+        return functools.partial(self.__call__, obj)
+
+    def error(self, data):
+        return FormatResponse(error="permission-denied", data=data)
+
+    def __call__(self, *args, **kwargs):
+        print("!!!")
+        self.request = args[1]
+        if self.check_permission():
+            if not self.request.user.is_active:
+                return self.error("Your account is disabled")
+            return self.func(*args, **kwargs)
+        else:
+            return self.error("Please login first")
+
+    def check_permission(self):
+        raise NotImplementedError()
+
+
+class login_required(BasePermissionDecorator):
+    """
+    jwt라 헤더검증 자동으로함
+    명시적 표시로 사용 가능...
+    """
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def check_permission(self):
+        return self.request.user.is_authenticated
