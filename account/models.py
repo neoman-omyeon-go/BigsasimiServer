@@ -73,6 +73,7 @@ class UserProfile(models.Model):
     goals_carb = models.PositiveIntegerField(default=0)     # 탄수화물
     goals_protein = models.PositiveIntegerField(default=0)  # 단백질
     goals_fat = models.PositiveIntegerField(default=0)      # 지방
+    goals_natrium  = models.PositiveIntegerField(default=0) # 나트륨
     
     class Meta:
         db_table = "user_profile"
