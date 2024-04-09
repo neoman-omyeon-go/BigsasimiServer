@@ -45,12 +45,35 @@ class User(AbstractUser):
 
     class Meta:
         db_table = "user"
+        ordering = ['id']
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    real_name = models.TextField(null=True)
-    avatar = models.TextField(default=f"{settings.AVATAR_URI_PREFIX}/default.png")
+    """
+    입력 : user
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_uniq')
+    avatar = models.TextField(default=f"{settings.AVATAR_UPLOAD_DIR}/default-avatar.png")
 
+    # 필수 입력
+    real_name = models.TextField(default='anonymous',null=True)                         # 실명
+    gender = models.CharField(default='None', max_length=256, blank=False, null=False)  # 성별
+    age = models.PositiveSmallIntegerField(default=0, blank=False, null=False)          # 나이
+    height = models.PositiveSmallIntegerField(default=0, blank=False, null=False)       # 신장
+    weight = models.PositiveSmallIntegerField(default=0, blank=False, null=False)       # 체중
+    
+    ##### +@입력
+    # 개인 환경
+    disease = ArrayField(models.CharField(max_length=256), blank=True, default=list)    # 질환 정보
+    allergy = ArrayField(models.CharField(max_length=256), blank=True, default=list)    # 알러지 정보
+    medicine = ArrayField(models.CharField(max_length=256), blank=True, default=list)   # 섭취중인 약 정보
+    
+    # 개인 설정 목표
+    goals_calories = models.PositiveIntegerField(default=2500)
+    goals_carb = models.PositiveIntegerField(default=0)     # 탄수화물
+    goals_protein = models.PositiveIntegerField(default=0)  # 단백질
+    goals_fat = models.PositiveIntegerField(default=0)      # 지방
+    
     class Meta:
         db_table = "user_profile"
+        ordering = ['id']
