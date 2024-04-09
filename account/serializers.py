@@ -37,3 +37,23 @@ class UserLoginSerializer(serializers.Serializer):
             return user
         else:
             return None
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
+
+class EditUserProfileSerializer(serializers.Serializer):
+    # 필수
+    real_name = serializers.CharField(required=True)
+    gender = serializers.CharField(required=True)
+    age = serializers.IntegerField(required=True)
+    height = serializers.IntegerField(required=True)
+    weight = serializers.IntegerField(required=True)
+    
+    # 선택
+    goals_calories = serializers.IntegerField(required=False)
+    goals_carb = serializers.IntegerField(required=False)
+    goals_protein = serializers.IntegerField(required=False)
+    goals_fat = serializers.IntegerField(required=False)

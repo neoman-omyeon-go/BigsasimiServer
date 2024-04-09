@@ -1,5 +1,4 @@
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer, UserLoginSerializer
 from rest_framework.views import APIView
 from django.http import JsonResponse
 import jwt
@@ -7,10 +6,14 @@ from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework import status
 from config.settings.base import SECRET_KEY
 
-from utils.apihelper import FormatResponse
-
 # model
 from .models import User
+
+# ser
+from .serializers import UserSerializer, UserLoginSerializer, UserProfileSerializer, EditUserProfileSerializer
+
+# etc...
+from utils.apihelper import FormatResponse, FJR, login_required
 
 
 class UserRegister(APIView):
@@ -93,3 +96,38 @@ class UserLogout(APIView):
         response.delete_cookie("access")
         response.delete_cookie("refresh")
         return response
+
+
+class UserProfileAPI(APIView):
+    def get(self, request):
+        id = request.GET.get("id")
+        username = request.GET.get("username")
+        try:
+            if id:
+                u = User.objects.get(id=id).user_uniq  
+                ser = UserProfileSerializer(u)
+            elif username:
+                u = User.objects.get(username=username).user_uniq
+                ser = UserProfileSerializer(u)
+            else:
+                result = FJR(error="error", msg="params error", status=status.HTTP_400_BAD_REQUEST)
+            result = FJR(data=ser.data)
+            
+        except User.DoesNotExist:
+            result = FJR(error="error", msg="user not exist",status=status.HTTP_400_BAD_REQUEST)
+        
+        return result
+    
+    @login_required
+    def put(self, request):
+        serializer = EditUserProfileSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            data = serializer.validated_data
+            user_profile = request.user.user_uniq
+            for k, v in data.items():
+                setattr(user_profile, k, v)
+            user_profile.save()
+            return FJR(msg="user profile changed", data=UserProfileSerializer(user_profile).data)
+        else:
+            return FJR(error="error", msg="invalid access")
+            

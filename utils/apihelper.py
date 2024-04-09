@@ -45,11 +45,10 @@ class BasePermissionDecorator(object):
     def __get__(self, obj, obj_type):
         return functools.partial(self.__call__, obj)
 
-    def error(self, data):
-        return FormatResponse(error="permission-denied", data=data)
+    def error(self, msg):
+        return FJR(error="permission-denied", msg=msg, status=status.HTTP_400_BAD_REQUEST)
 
     def __call__(self, *args, **kwargs):
-        print("!!!")
         self.request = args[1]
         if self.check_permission():
             if not self.request.user.is_active:
