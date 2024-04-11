@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'debugtools',
     'account',
+    'nutritioninformation',
 ]
 
 ### Add to pip install module 
