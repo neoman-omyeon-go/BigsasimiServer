@@ -130,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -155,8 +155,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AVATAR_URI_PREFIX = "/avatar"
-AVATAR_UPLOAD_DIR = f"{STATIC_DIR}{AVATAR_URI_PREFIX}"
+AVATAR_URI_PREFIX = "/static/avatar"
+AVATAR_UPLOAD_DIR = f"{BASE_DIR}{AVATAR_URI_PREFIX}"
+
+IMAGE_URI_PREFIX = "/static/image"
+IMAGE_UPLOAD_DIR = f"{BASE_DIR}{IMAGE_URI_PREFIX}"
 
 ### jwt
 from datetime import timedelta

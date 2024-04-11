@@ -3,6 +3,8 @@ from django.contrib.postgres.fields import ArrayField
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
+from datetime import date
+from django.db.models import Sum
 
 class UserType(object):
     REGULAR_USER = "Regular User"
@@ -53,7 +55,7 @@ class UserProfile(models.Model):
     입력 : user
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_uniq')
-    avatar = models.TextField(default=f"{settings.AVATAR_UPLOAD_DIR}/default-avatar.png")
+    avatar = models.TextField(default=f"{settings.AVATAR_URI_PREFIX}/default-avatar.png")
 
     # 필수 입력
     real_name = models.TextField(default='anonymous',null=True)                         # 실명
@@ -73,8 +75,24 @@ class UserProfile(models.Model):
     goals_carb = models.PositiveIntegerField(default=0)     # 탄수화물
     goals_protein = models.PositiveIntegerField(default=0)  # 단백질
     goals_fat = models.PositiveIntegerField(default=0)      # 지방
-    # goals_natrium  = models.PositiveIntegerField(default=0) # 나트륨
+    goals_natrium  = models.PositiveIntegerField(default=0) # 나트륨
     
     class Meta:
         db_table = "user_profile"
         ordering = ['id']
+
+    def gat_daily_info(self):
+        today = date.today()
+        today_records = self.ingestion_info.filter(create_time__date=today)
+
+        # 누적할 변수 초기화
+        total_info = today_records.aggregate(
+            total_calories=Sum('calories'),
+            total_carb=Sum('carb'),
+            total_protein=Sum('protein'),
+            total_fat=Sum('fat'),
+            total_natrium=Sum('natrium')
+        )
+
+        # 누적된 정보 반환
+        return total_info
