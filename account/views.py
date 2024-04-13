@@ -104,7 +104,7 @@ class UserProfileAPI(APIView):
         username = request.GET.get("username")
         try:
             if id:
-                u = User.objects.get(id=id).user_uniq  
+                u = User.objects.get(id=id).user_uniq
                 ser = UserProfileSerializer(u)
             elif username:
                 u = User.objects.get(username=username).user_uniq
@@ -112,12 +112,12 @@ class UserProfileAPI(APIView):
             else:
                 result = FJR(error="error", msg="params error", status=status.HTTP_400_BAD_REQUEST)
             result = FJR(data=ser.data)
-            
+
         except User.DoesNotExist:
             result = FJR(error="error", msg="user not exist",status=status.HTTP_400_BAD_REQUEST)
-        
+
         return result
-    
+
     @login_required
     def put(self, request):
         serializer = EditUserProfileSerializer(data=request.data)
@@ -130,4 +130,3 @@ class UserProfileAPI(APIView):
             return FJR(msg="user profile changed", data=UserProfileSerializer(user_profile).data)
         else:
             return FJR(error="error", msg="invalid access")
-            

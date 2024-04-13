@@ -15,8 +15,9 @@ def get_uuname(salt:str="") -> str:
     uuname = get_random_string(32, allowed_chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") + salt
     while os.path.exists(os.path.join(settings.IMAGE_UPLOAD_DIR, uuname)):
         uuname = get_random_string(32, allowed_chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") + salt
-    
+
     return uuname
+
 
 def validate_serializer(serializer):
     '''data checker'''

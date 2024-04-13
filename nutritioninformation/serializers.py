@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import IngestionInformation
 from django import forms
 
+
 class IngestionInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngestionInformation

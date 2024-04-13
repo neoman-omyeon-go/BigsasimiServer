@@ -13,10 +13,10 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data.get('password'))
         user.save()
-        profile = UserProfile.objects.create(
+        UserProfile.objects.create(
             user=user
         )
-        
+
         return user
 
     class Meta:
@@ -44,6 +44,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = '__all__'
 
+
 class EditUserProfileSerializer(serializers.Serializer):
     # 필수
     real_name = serializers.CharField(required=True)
@@ -51,7 +52,7 @@ class EditUserProfileSerializer(serializers.Serializer):
     age = serializers.IntegerField(required=True)
     height = serializers.IntegerField(required=True)
     weight = serializers.IntegerField(required=True)
-    
+
     # 선택
     goals_calories = serializers.IntegerField(required=False)
     goals_carb = serializers.IntegerField(required=False)

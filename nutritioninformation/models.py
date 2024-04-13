@@ -13,17 +13,17 @@ class IngestionInformation(models.Model):
     """
     userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='ingestion_info')
     create_time = models.DateTimeField(auto_now_add=True, null=True)
-    
+
     image_path = models.TextField(default=f"{settings.IMAGE_URI_PREFIX}/default_image.png", null=True, blank=True)
     name = models.CharField(default='None', max_length=256, blank=False, null=False)
-    
+
     ### basic field
     calories = models.PositiveIntegerField(default=0)
-    carb = models.PositiveIntegerField(default=0)     # 탄수화물
-    protein = models.PositiveIntegerField(default=0)  # 단백질
-    fat = models.PositiveIntegerField(default=0)      # 지방
-    natrium  = models.PositiveIntegerField(default=0) # 나트륨
-    
+    carb = models.PositiveIntegerField(default=0)       # 탄수화물
+    protein = models.PositiveIntegerField(default=0)    # 단백질
+    fat = models.PositiveIntegerField(default=0)        # 지방
+    natrium = models.PositiveIntegerField(default=0)    # 나트륨
+
     ### advanced field
     trans_fat = models.PositiveIntegerField(default=0)
     saturated_fat = models.PositiveIntegerField(default=0)
