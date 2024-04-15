@@ -17,7 +17,6 @@ from django.shortcuts import render
 from utils.apihelper import login_required
 from account.serializers import UserSerializer
 
-
 class test_index(APIView):
     def get_queryset(self):
         return Blog.objects.all()

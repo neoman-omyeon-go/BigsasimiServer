@@ -83,9 +83,7 @@ class UserProfile(models.Model):
         ordering = ['id']
 
     def gat_daily_info(self, d=None) :
-        today = date.today()
-        if d:
-            today = d
+        today = d
         today_records = self.ingestion_info.filter(create_time__date=today)
 
         # 누적할 변수 초기화

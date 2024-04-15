@@ -131,7 +131,9 @@ class DailyInformationAPI(APIView):
 
         if dest_date:
             dest_date = date.fromisoformat(dest_date)
-
+        else:
+            dest_date = date.today()
+            
         try:
             user = User.objects.get(id=pk)
             data = user.user_uniq.gat_daily_info(dest_date)
