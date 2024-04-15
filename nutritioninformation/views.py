@@ -3,10 +3,9 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .models import IngestionInformation
 from .serializers import IngestionInformationSerializer, ImageUploadForm
-from account.models import UserProfile
+from account.models import UserProfile, User
 from utils.apihelper import FJR, login_required, get_uuname
 import os
-from account.models import User
 from django.core.paginator import Paginator
 from datetime import date
 
@@ -121,6 +120,22 @@ class IngestionInformationListAPI(APIView):
         # except Exception:
         #     result = FJR(error="error", msg="invaild input Params", status=status.HTTP_400_BAD_REQUEST)
 
+        return result
+
+
+class IngestionInformationAllListAPI(APIView):
+    def get(self, request):
+        page = request.GET.get("page", '1')
+        size = request.GET.get("size", '10')
+        search_date = request.GET.get("date", None)  # yyyy-nn-dd
+        data = IngestionInformation.objects.all()
+        if search_date:
+            search_date = date.fromisoformat(search_date)
+            data = data.filter(create_time__date=search_date)
+        paginator = Paginator(data.order_by('-pk'), size)
+        paged_data = paginator.get_page(page)
+        result = IngestionInformationSerializer(paged_data, many=True).data
+        result = FJR(msg="get all data", data=result)
         return result
 
 
