@@ -3,6 +3,9 @@ from django.contrib.postgres.fields import ArrayField
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
+from datetime import date
+from django.db.models import Sum
+
 
 class UserType(object):
     REGULAR_USER = "Regular User"
@@ -45,12 +48,52 @@ class User(AbstractUser):
 
     class Meta:
         db_table = "user"
+        ordering = ['id']
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    real_name = models.TextField(null=True)
-    avatar = models.TextField(default=f"{settings.AVATAR_URI_PREFIX}/default.png")
+    """
+    입력 : user
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_uniq')
+    avatar = models.TextField(default=f"{settings.AVATAR_URI_PREFIX}/default-avatar.png")
+
+    # 필수 입력
+    real_name = models.TextField(default='anonymous',null=True)                         # 실명
+    gender = models.CharField(default='None', max_length=256, blank=False, null=False)  # 성별
+    age = models.PositiveSmallIntegerField(default=0, blank=False, null=False)          # 나이
+    height = models.PositiveSmallIntegerField(default=0, blank=False, null=False)       # 신장
+    weight = models.PositiveSmallIntegerField(default=0, blank=False, null=False)       # 체중
+
+    ##### +@입력
+    # 개인 환경
+    disease = ArrayField(models.CharField(max_length=256), blank=True, default=list)    # 질환 정보
+    allergy = ArrayField(models.CharField(max_length=256), blank=True, default=list)    # 알러지 정보
+    medicine = ArrayField(models.CharField(max_length=256), blank=True, default=list)   # 섭취중인 약 정보
+
+    # 개인 설정 목표
+    goals_calories = models.PositiveIntegerField(default=2500)
+    goals_carb = models.PositiveIntegerField(default=0)     # 탄수화물
+    goals_protein = models.PositiveIntegerField(default=0)  # 단백질
+    goals_fat = models.PositiveIntegerField(default=0)      # 지방
+    goals_natrium = models.PositiveIntegerField(default=0)  # 나트륨
 
     class Meta:
         db_table = "user_profile"
+        ordering = ['id']
+
+    def gat_daily_info(self, d=None) :
+        today = d
+        today_records = self.ingestion_info.filter(create_time__date=today)
+
+        # 누적할 변수 초기화
+        total_info = today_records.aggregate(
+            total_calories=Sum('calories'),
+            total_carb=Sum('carb'),
+            total_protein=Sum('protein'),
+            total_fat=Sum('fat'),
+            total_natrium=Sum('natrium')
+        )
+
+        # 누적된 정보 반환
+        return (total_info, today)

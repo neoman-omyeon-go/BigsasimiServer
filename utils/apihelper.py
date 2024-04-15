@@ -1,4 +1,7 @@
 import functools
+from django.utils.crypto import get_random_string
+import os
+from django.conf import settings
 
 # http
 from rest_framework import status
@@ -6,6 +9,14 @@ from django.http import JsonResponse
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+
+def get_uuname(salt:str="") -> str:
+    uuname = get_random_string(32, allowed_chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") + salt
+    while os.path.exists(os.path.join(settings.IMAGE_UPLOAD_DIR, uuname)):
+        uuname = get_random_string(32, allowed_chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") + salt
+
+    return uuname
 
 
 def validate_serializer(serializer):
@@ -45,11 +56,10 @@ class BasePermissionDecorator(object):
     def __get__(self, obj, obj_type):
         return functools.partial(self.__call__, obj)
 
-    def error(self, data):
-        return FormatResponse(error="permission-denied", data=data)
+    def error(self, msg):
+        return FJR(error="permission-denied", msg=msg, status=status.HTTP_400_BAD_REQUEST)
 
     def __call__(self, *args, **kwargs):
-        print("!!!")
         self.request = args[1]
         if self.check_permission():
             if not self.request.user.is_active:
