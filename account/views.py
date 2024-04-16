@@ -130,3 +130,70 @@ class UserProfileAPI(APIView):
             return FJR(msg="user profile changed", data=UserProfileSerializer(user_profile).data)
         else:
             return FJR(error="error", msg="invalid access")
+
+
+class UserProfileAddAPI(APIView):
+    @login_required
+    def get(self, request):
+        user = request.user
+        userprofile=user.user_uniq
+        target=request.GET.get('target',None)
+
+        if target in ["disease", "allergy", "medicine"]:
+            value = request.GET.get('value',None)
+            if value is None:
+                return FJR(error="error", msg="need value params")
+        else:
+            return FJR(error="error", msg="invaild target params")
+
+        if target=="disease":
+            userprofile.disease.append(value)
+            userprofile.disease.sort()
+        elif target=="allergy":
+            userprofile.allergy.append(value)
+            userprofile.allergy.sort()
+        elif target=="medicine":
+            userprofile.medicine.append(value)
+            userprofile.medicine.sort()
+        else:
+           return FJR(error="error", msg="invaild target params")
+        userprofile.save()
+
+        return FJR(msg="user profile changed", data=UserProfileSerializer(userprofile).data)
+
+
+class UserProfileRemoveAPI(APIView):
+    @login_required
+    def get(self, request):
+        user = request.user
+        userprofile=user.user_uniq
+        target=request.GET.get('target',None)
+
+        if target in ["disease", "allergy", "medicine"]:
+            value = request.GET.get('value',None)
+            if value is None:
+                return FJR(error="error", msg="need value params")
+        else:
+            return FJR(error="error", msg="invaild target params")
+
+        ### 인덱스로 서치할지 값으로 서치할지는 보류... 지금은 값으로
+        try:
+            if target=="disease":
+                idx = userprofile.disease.index(value)
+                del userprofile.disease[idx]
+                userprofile.disease.sort()
+            elif target=="allergy":
+                idx = userprofile.allergy.index(value)
+                del userprofile.allergy[idx]
+                userprofile.allergy.sort()
+            elif target=="medicine":
+                idx = userprofile.medicine.index(value)
+                del userprofile.medicine[idx]
+                userprofile.medicine.sort()
+            else:
+                return FJR(error="error", msg="invaild target params")
+            userprofile.save()
+            return FJR(msg="user profile changed", data=UserProfileSerializer(userprofile).data)
+
+        except ValueError:
+            return FJR(error="error", msg="value not found")
