@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Wait for PostgreSQL to be ready
+echo "sleep........." 
 sleep 7
 echo "DB is ready?????" 
 
