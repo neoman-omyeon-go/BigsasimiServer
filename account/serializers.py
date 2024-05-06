@@ -58,3 +58,8 @@ class EditUserProfileSerializer(serializers.Serializer):
     goals_carb = serializers.IntegerField(required=False)
     goals_protein = serializers.IntegerField(required=False)
     goals_fat = serializers.IntegerField(required=False)
+
+    # +@
+    disease = serializers.CharField(required=False)
+    allergy = serializers.CharField(required=False)
+    avatar = serializers.FileField(required=False)

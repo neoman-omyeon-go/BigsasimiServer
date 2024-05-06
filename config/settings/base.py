@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'debugtools',
     'account',
     'nutritioninformation',
+    'etcetera',
 ]
 
 ### Add to pip install module 

@@ -124,6 +124,9 @@ class UserProfileAPI(APIView):
         if serializer.is_valid(raise_exception=True):
             data = serializer.validated_data
             user_profile = request.user.user_uniq
+            data["avatar"] = "/static/avatar/default-avatar.png"  # 가입력
+            data["disease"] = data["disease"].split(",")
+            data["allergy"] = data["allergy"].split(",")
             for k, v in data.items():
                 setattr(user_profile, k, v)
             user_profile.save()
@@ -136,8 +139,8 @@ class UserProfileAddAPI(APIView):
     @login_required
     def get(self, request):
         user = request.user
-        userprofile=user.user_uniq
-        target=request.GET.get('target',None)
+        userprofile = user.user_uniq
+        target = request.GET.get('target',None)
 
         if target in ["disease", "allergy", "medicine"]:
             value = request.GET.get('value',None)
@@ -146,17 +149,17 @@ class UserProfileAddAPI(APIView):
         else:
             return FJR(error="error", msg="invaild target params")
 
-        if target=="disease":
+        if target == "disease":
             userprofile.disease.append(value)
             userprofile.disease.sort()
-        elif target=="allergy":
+        elif target == "allergy":
             userprofile.allergy.append(value)
             userprofile.allergy.sort()
-        elif target=="medicine":
+        elif target == "medicine":
             userprofile.medicine.append(value)
             userprofile.medicine.sort()
         else:
-           return FJR(error="error", msg="invaild target params")
+            return FJR(error="error", msg="invaild target params")
         userprofile.save()
 
         return FJR(msg="user profile changed", data=UserProfileSerializer(userprofile).data)
@@ -166,8 +169,8 @@ class UserProfileRemoveAPI(APIView):
     @login_required
     def get(self, request):
         user = request.user
-        userprofile=user.user_uniq
-        target=request.GET.get('target',None)
+        userprofile = user.user_uniq
+        target = request.GET.get('target',None)
 
         if target in ["disease", "allergy", "medicine"]:
             value = request.GET.get('value',None)
@@ -178,15 +181,15 @@ class UserProfileRemoveAPI(APIView):
 
         ### 인덱스로 서치할지 값으로 서치할지는 보류... 지금은 값으로
         try:
-            if target=="disease":
+            if target == "disease":
                 idx = userprofile.disease.index(value)
                 del userprofile.disease[idx]
                 userprofile.disease.sort()
-            elif target=="allergy":
+            elif target == "allergy":
                 idx = userprofile.allergy.index(value)
                 del userprofile.allergy[idx]
                 userprofile.allergy.sort()
-            elif target=="medicine":
+            elif target == "medicine":
                 idx = userprofile.medicine.index(value)
                 del userprofile.medicine[idx]
                 userprofile.medicine.sort()

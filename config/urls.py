@@ -11,6 +11,8 @@ urlpatterns = [
     path('api/', include('account.urls')),
     path('api/', include('nutritioninformation.urls')),
     # path('api-auth/', include('rest_framework.urls')),
+
+    path('api/', include('etcetera.urls')),
 ]
 
 # wtf!!! ++++++ need static file location
