@@ -47,7 +47,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class EditUserProfileSerializer(serializers.Serializer):
     # 필수
-    real_name = serializers.CharField(required=True)
+    # real_name = serializers.CharField(required=False)
     gender = serializers.CharField(required=True)
     age = serializers.IntegerField(required=True)
     height = serializers.IntegerField(required=True)

@@ -119,6 +119,20 @@ class UserProfileAPI(APIView):
         return result
 
     @login_required
+    def post(self, request):
+        key = request.POST.get('key', None)
+        value = request.POST.get('value', None)
+
+        if key is not None and value is not None:
+            user_profile = request.user.user_uniq
+            setattr(user_profile, key, value)
+            user_profile.save()
+            return FJR(msg="user profile changed", data=UserProfileSerializer(user_profile).data)
+
+        result = FJR(error="error", msg="params error",status=status.HTTP_400_BAD_REQUEST)
+        return result
+
+    @login_required
     def put(self, request):
         serializer = EditUserProfileSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
