@@ -92,7 +92,8 @@ class UserProfile(models.Model):
             total_carb=Sum('carb'),
             total_protein=Sum('protein'),
             total_fat=Sum('fat'),
-            total_natrium=Sum('natrium')
+            total_natrium=Sum('natrium'),
+            total_cholesterol=Sum('cholesterol'),
         )
 
         # 누적된 정보 반환

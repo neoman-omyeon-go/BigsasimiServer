@@ -23,19 +23,19 @@ class IngestionInformationAPI(APIView):
         except IngestionInformation.DoesNotExist:
             return FJR(error="error", msg="wrong pk value", status=status.HTTP_400_BAD_REQUEST)
 
-    def fetch_file(self, request):
+    def fetch_file(self, request) -> tuple:
         profile = request.user.user_uniq
         form = ImageUploadForm(request.POST, request.FILES)
-
+        image_path = f"{settings.IMAGE_URI_PREFIX}/default_image.png"
+        
         if form.is_valid():
             image = form.cleaned_data["image"]
-            name = form.cleaned_data["name"]
         else:
-            return FJR(error="error", msg="invaild data", status=status.HTTP_400_BAD_REQUEST)
+            return (image_path, False, "No File")
 
         suffix = os.path.splitext(image.name)[-1].lower()
         if suffix not in [".gif", ".jpg", ".jpeg", ".bmp", ".png"]:
-            return FJR(error="error", msg="invaild format", status=status.HTTP_400_BAD_REQUEST)
+            return (image_path, False, "invaild format")
 
         image_name = get_uuname(salt=suffix)
 
@@ -43,18 +43,10 @@ class IngestionInformationAPI(APIView):
             for chunk in image:
                 img.write(chunk)
 
-        # 추가 정보 기입 해야함...
-        new_info = IngestionInformation.objects.create(
-            userprofile=profile,
-            image_path=f"{settings.IMAGE_URI_PREFIX}/{image_name}",
-            name=name
-        )
+        save_image_path=f"{settings.IMAGE_URI_PREFIX}/{image_name}"
+        return (save_image_path, True, "success")
 
-        result = IngestionInformationSerializer(new_info).data
-        result = FJR(msg="post data", data=result)
-        return result
-
-    def fetch_param(self, request):
+    def fetch_param(self, request, img_path:tuple):
         profile = request.user.user_uniq
         new_info = IngestionInformation.objects.create(
             userprofile=profile,
@@ -68,19 +60,16 @@ class IngestionInformationAPI(APIView):
             saturated_fat=request.POST.get("saturated_fat", 0),
             unsaturated_fat=request.POST.get("unsaturated_fat", 0),
             cholesterol=request.POST.get("cholesterol", 0),
+            image_path=img_path[0]
         )
-
         result = IngestionInformationSerializer(new_info).data
         result = FJR(msg="post data", data=result)
         return result
 
     @login_required
     def post(self, request):
-        request_type = request.POST.get("request_type", None)
-        if request_type:
-            result = self.fetch_file(request)
-        else:
-            result = self.fetch_param(request)
+        img_path = self.fetch_file(request)
+        result = self.fetch_param(request, img_path=img_path)
 
         return result
 

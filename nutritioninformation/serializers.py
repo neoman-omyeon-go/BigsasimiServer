@@ -11,5 +11,4 @@ class IngestionInformationSerializer(serializers.ModelSerializer):
 
 class ImageUploadForm(forms.Form):
     image = forms.FileField()
-    name = forms.CharField()
     # etc...
