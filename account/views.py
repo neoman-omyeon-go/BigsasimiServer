@@ -134,6 +134,9 @@ class UserProfileAPI(APIView):
 
     @login_required
     def put(self, request):
+        print("request : ", request)
+        print("Post : ", request.POST)
+        
         serializer = EditUserProfileSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             data = serializer.validated_data
