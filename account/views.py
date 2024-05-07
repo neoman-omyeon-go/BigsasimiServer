@@ -139,8 +139,19 @@ class UserProfileAPI(APIView):
             data = serializer.validated_data
             user_profile = request.user.user_uniq
             data["avatar"] = "/static/avatar/default-avatar.png"  # 가입력
-            data["disease"] = data["disease"].split(",")
-            data["allergy"] = data["allergy"].split(",")
+            disease_is_none = data.get("disease",None)
+            allergy_is_none = data.get("allergy",None)
+            
+            if disease_is_none is None:
+                data["disease"] = list()
+            else:
+                data["disease"] = data["disease"].split(",")
+            
+            if allergy_is_none is None:
+                data["allergy"] = list()
+            else:
+                data["allergy"] = data["allergy"].split(",")
+
             for k, v in data.items():
                 setattr(user_profile, k, v)
             user_profile.save()
