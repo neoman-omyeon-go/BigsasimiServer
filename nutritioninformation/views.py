@@ -60,6 +60,7 @@ class IngestionInformationAPI(APIView):
             saturated_fat=request.POST.get("saturated_fat", 0),
             unsaturated_fat=request.POST.get("unsaturated_fat", 0),
             cholesterol=request.POST.get("cholesterol", 0),
+            saccharide = request.POST.get("saccharide", 0),
             image_path=img_path[0]
         )
         result = IngestionInformationSerializer(new_info).data

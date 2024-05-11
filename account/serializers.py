@@ -9,12 +9,17 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create(
             username=validated_data.get('username'),
-            email=validated_data.get('email', None)
+            email=validated_data.get('email', None),
         )
         user.set_password(validated_data.get('password'))
         user.save()
         UserProfile.objects.create(
-            user=user
+            user=user,
+            real_name="User Name",
+            gender="Other",
+            age=25,
+            height=180,
+            weight=75,
         )
 
         return user
@@ -58,6 +63,8 @@ class EditUserProfileSerializer(serializers.Serializer):
     goals_carb = serializers.IntegerField(required=False)
     goals_protein = serializers.IntegerField(required=False)
     goals_fat = serializers.IntegerField(required=False)
+    goals_natrium = serializers.IntegerField(required=False)
+    goals_saccharide = serializers.IntegerField(required=False)
 
     # +@
     disease = serializers.CharField(required=False)

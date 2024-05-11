@@ -77,6 +77,7 @@ class UserProfile(models.Model):
     goals_protein = models.PositiveIntegerField(default=0)  # 단백질
     goals_fat = models.PositiveIntegerField(default=0)      # 지방
     goals_natrium = models.PositiveIntegerField(default=0)  # 나트륨
+    goals_saccharide = models.PositiveIntegerField(default=0)  # 당류
 
     class Meta:
         db_table = "user_profile"
@@ -94,6 +95,7 @@ class UserProfile(models.Model):
             total_fat=Sum('fat'),
             total_natrium=Sum('natrium'),
             total_cholesterol=Sum('cholesterol'),
+            total_saccharide=Sum('saccharide'),
         )
 
         # 누적된 정보 반환

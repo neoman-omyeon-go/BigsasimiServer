@@ -23,7 +23,8 @@ class IngestionInformation(models.Model):
     protein = models.PositiveIntegerField(default=0)    # 단백질
     fat = models.PositiveIntegerField(default=0)        # 지방
     natrium = models.PositiveIntegerField(default=0)    # 나트륨
-
+    saccharide = models.PositiveIntegerField(default=0)  
+ 
     ### advanced field
     trans_fat = models.PositiveIntegerField(default=0)
     saturated_fat = models.PositiveIntegerField(default=0)
