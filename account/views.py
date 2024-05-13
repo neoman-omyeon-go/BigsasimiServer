@@ -134,6 +134,13 @@ class UserProfileAPI(APIView):
 
     @login_required
     def put(self, request):
+        def reform_list(arr:list)->list:
+            result = list()
+            for i in set(arr):
+                if len(i) != 0:
+                    result.append(i)
+            return result
+        
         print("request : ", request)
         print("Post : ", request.POST)
         
@@ -148,12 +155,12 @@ class UserProfileAPI(APIView):
             if disease_is_none is None:
                 data["disease"] = list()
             else:
-                data["disease"] = data["disease"].split(",")
+                data["disease"] = reform_list(data["disease"].split(","))
             
             if allergy_is_none is None:
                 data["allergy"] = list()
             else:
-                data["allergy"] = data["allergy"].split(",")
+                data["allergy"] = reform_list(data["allergy"].split(","))
 
             for k, v in data.items():
                 setattr(user_profile, k, v)
