@@ -139,7 +139,7 @@ class UserProfileAPI(APIView):
             for i in set(arr):
                 if len(i) != 0:
                     result.append(i)
-            return result
+            return sorted(result)
         
         print("request : ", request)
         print("Post : ", request.POST)
