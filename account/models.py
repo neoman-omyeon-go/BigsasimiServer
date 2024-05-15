@@ -88,7 +88,7 @@ class UserProfile(models.Model):
         today_records = self.ingestion_info.filter(create_time__date=today)
 
         # 누적할 변수 초기화
-        total_info = today_records.aggregate(
+        total_info:dict = today_records.aggregate(
             total_calories=Sum('calories'),
             total_carb=Sum('carb'),
             total_protein=Sum('protein'),
@@ -97,6 +97,9 @@ class UserProfile(models.Model):
             total_cholesterol=Sum('cholesterol'),
             total_saccharide=Sum('saccharide'),
         )
+        for k,v in total_info.items():
+            if v == None:
+                total_info[k]=0
 
         # 누적된 정보 반환
         return (total_info, today)
