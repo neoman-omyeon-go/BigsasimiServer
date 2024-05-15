@@ -18,17 +18,15 @@ class IngestionInformation(models.Model):
     name = models.CharField(default='None', max_length=256, blank=False, null=False)
 
     ### basic field
-    calories = models.PositiveIntegerField(default=0)
-    carb = models.PositiveIntegerField(default=0)        # 탄수화물
-    protein = models.PositiveIntegerField(default=0)     # 단백질
-    fat = models.PositiveIntegerField(default=0)         # 지방
-    natrium = models.PositiveIntegerField(default=0)     # 나트륨
-    saccharide = models.PositiveIntegerField(default=0)  # 당
+    calories = models.DecimalField(default=0, decimal_places=2, max_digits=7)
+    carb = models.DecimalField(default=0, decimal_places=2, max_digits=7)         # 탄수화물
+    protein = models.DecimalField(default=0, decimal_places=2, max_digits=7)      # 단백질
+    fat = models.DecimalField(default=0, decimal_places=2, max_digits=7)          # 지방
+    natrium = models.DecimalField(default=0, decimal_places=2, max_digits=7)      # 나트륨
+    saccharide = models.DecimalField(default=0, decimal_places=2, max_digits=7)   # 당
+    cholesterol = models.DecimalField(default=0, decimal_places=2, max_digits=7)  # 콜레스테롤
 
     ### advanced field
-    trans_fat = models.PositiveIntegerField(default=0)
-    saturated_fat = models.PositiveIntegerField(default=0)
-    unsaturated_fat = models.PositiveIntegerField(default=0)
-    cholesterol = models.PositiveIntegerField(default=0)
-
-    # vitamin # 비타민은 재정의 필요
+    trans_fat = models.DecimalField(default=0, decimal_places=2, max_digits=7)
+    saturated_fat = models.DecimalField(default=0, decimal_places=2, max_digits=7)
+    unsaturated_fat = models.DecimalField(default=0, decimal_places=2, max_digits=7)
