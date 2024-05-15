@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserRegister, UserLogin, UserLogout, UserProfileAPI, UserProfileAddAPI, UserProfileRemoveAPI
+from .views import UserRegister, UserLogin, UserLogout, UserProfileAPI, UserProfileAddAPI, UserProfileRemoveAPI, UserProfileAvatarUpload
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 urlpatterns = [
@@ -14,4 +14,5 @@ urlpatterns = [
     path('profile/', UserProfileAPI.as_view(), name='user_profile_api'),   # 프로필 조회
     path('profile_add/', UserProfileAddAPI.as_view(), name='user_profile_add_api'),   # 프로필 수정(리스트 추가)
     path('profile_remove/', UserProfileRemoveAPI.as_view(), name='user_profile_remove_api'),   # 프로필 수정(리스트 삭제)
+    path('profile_avatar_uplaoad/', UserProfileAvatarUpload.as_view(), name='profile_avatar_uplaoad'),   # 프로필 수정(리스트 삭제)
 ]

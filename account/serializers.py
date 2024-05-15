@@ -69,4 +69,7 @@ class EditUserProfileSerializer(serializers.Serializer):
     # +@
     disease = serializers.CharField(required=False)
     allergy = serializers.CharField(required=False)
-    avatar = serializers.FileField(required=False)
+
+
+class ImageUploadSerializer(serializers.Serializer):
+    image = serializers.FileField()

@@ -24,10 +24,10 @@ class IngestionInformationAPI(APIView):
             return FJR(error="error", msg="wrong pk value", status=status.HTTP_400_BAD_REQUEST)
 
     def fetch_file(self, request) -> tuple:
-        profile = request.user.user_uniq
+        # profile = request.user.user_uniq
         form = ImageUploadForm(request.POST, request.FILES)
         image_path = f"{settings.IMAGE_URI_PREFIX}/default_image.png"
-        
+
         if form.is_valid():
             image = form.cleaned_data["image"]
         else:
@@ -43,7 +43,7 @@ class IngestionInformationAPI(APIView):
             for chunk in image:
                 img.write(chunk)
 
-        save_image_path=f"{settings.IMAGE_URI_PREFIX}/{image_name}"
+        save_image_path = f"{settings.IMAGE_URI_PREFIX}/{image_name}"
         return (save_image_path, True, "success")
 
     def fetch_param(self, request, img_path:tuple):
@@ -60,7 +60,7 @@ class IngestionInformationAPI(APIView):
             saturated_fat=request.POST.get("saturated_fat", 0),
             unsaturated_fat=request.POST.get("unsaturated_fat", 0),
             cholesterol=request.POST.get("cholesterol", 0),
-            saccharide = request.POST.get("saccharide", 0),
+            saccharide=request.POST.get("saccharide", 0),
             image_path=img_path[0]
         )
         result = IngestionInformationSerializer(new_info).data

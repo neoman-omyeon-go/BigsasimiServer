@@ -19,12 +19,12 @@ class IngestionInformation(models.Model):
 
     ### basic field
     calories = models.PositiveIntegerField(default=0)
-    carb = models.PositiveIntegerField(default=0)       # 탄수화물
-    protein = models.PositiveIntegerField(default=0)    # 단백질
-    fat = models.PositiveIntegerField(default=0)        # 지방
-    natrium = models.PositiveIntegerField(default=0)    # 나트륨
-    saccharide = models.PositiveIntegerField(default=0)  
- 
+    carb = models.PositiveIntegerField(default=0)        # 탄수화물
+    protein = models.PositiveIntegerField(default=0)     # 단백질
+    fat = models.PositiveIntegerField(default=0)         # 지방
+    natrium = models.PositiveIntegerField(default=0)     # 나트륨
+    saccharide = models.PositiveIntegerField(default=0)  # 당
+
     ### advanced field
     trans_fat = models.PositiveIntegerField(default=0)
     saturated_fat = models.PositiveIntegerField(default=0)

@@ -5,15 +5,17 @@ import jwt
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework import status
 from config.settings.base import SECRET_KEY
+import os
+from django.conf import settings
 
 # model
 from .models import User
 
 # ser
-from .serializers import UserSerializer, UserLoginSerializer, UserProfileSerializer, EditUserProfileSerializer
+from .serializers import UserSerializer, UserLoginSerializer, UserProfileSerializer, EditUserProfileSerializer, ImageUploadSerializer
 
 # etc...
-from utils.apihelper import FormatResponse, FJR, login_required
+from utils.apihelper import FormatResponse, FJR, login_required, get_uuname
 
 
 class UserRegister(APIView):
@@ -134,29 +136,28 @@ class UserProfileAPI(APIView):
 
     @login_required
     def put(self, request):
-        def reform_list(arr:list)->list:
+        def reform_list(arr:list) -> list:
             result = list()
             for i in set(arr):
                 if len(i) != 0:
                     result.append(i)
             return sorted(result)
-        
+
         print("request : ", request)
         print("Post : ", request.POST)
-        
+
         serializer = EditUserProfileSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             data = serializer.validated_data
             user_profile = request.user.user_uniq
-            data["avatar"] = "/static/avatar/default-avatar.png"  # 가입력
             disease_is_none = data.get("disease",None)
             allergy_is_none = data.get("allergy",None)
-            
+
             if disease_is_none is None:
                 data["disease"] = list()
             else:
                 data["disease"] = reform_list(data["disease"].split(","))
-            
+
             if allergy_is_none is None:
                 data["allergy"] = list()
             else:
@@ -235,3 +236,41 @@ class UserProfileRemoveAPI(APIView):
 
         except ValueError:
             return FJR(error="error", msg="value not found")
+
+
+class UserProfileAvatarUpload(APIView):
+    def post(self, request):
+        user_profile = request.user.user_uniq
+        serializer = ImageUploadSerializer(data=request.data)
+
+        if serializer.is_valid():
+            image = serializer.validated_data.get('image', None)
+        else:
+            return FJR(error="error", msg="invalid image file")
+
+        # 이미지 저장
+        suffix = os.path.splitext(image.name)[-1].lower()
+        if suffix not in [".gif", ".jpg", ".jpeg", ".bmp", ".png"]:
+            return FJR(error="error", msg="invalid file format")
+        image_name = get_uuname(salt=suffix)
+        with open(os.path.join(settings.AVATAR_UPLOAD_DIR, image_name), "wb") as img:
+            for chunk in image:
+                img.write(chunk)
+
+        # 이전 이미지파일 파일 삭제
+        try:
+            before_avatar_URI = user_profile.avatar
+            if before_avatar_URI != settings.DEFAULT_AVATAR_URI:
+                target_path = f"{settings.BASE_DIR}{before_avatar_URI}"
+                os.remove(target_path)
+            else:
+                print("can't remove Default Image")
+                pass
+        except OSError as e:
+            print("OSError: ", target_path, e.strerror)
+        finally:
+            current_avatar_path = f"{settings.AVATAR_URI_PREFIX}/{image_name}"
+            user_profile.avatar = current_avatar_path
+            user_profile.save()
+
+        return FJR(msg="avatar changed", data={"avatar":current_avatar_path})

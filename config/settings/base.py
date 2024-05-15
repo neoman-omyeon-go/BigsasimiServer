@@ -157,6 +157,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AVATAR_URI_PREFIX = "/static/avatar"
 AVATAR_UPLOAD_DIR = f"{BASE_DIR}{AVATAR_URI_PREFIX}"
+# "/static/avatar/default-avatar.png"
+DEFAULT_AVATAR_URI = f"{AVATAR_URI_PREFIX}/default-avatar.png"
 
 IMAGE_URI_PREFIX = "/static/image"
 IMAGE_UPLOAD_DIR = f"{BASE_DIR}{IMAGE_URI_PREFIX}"
