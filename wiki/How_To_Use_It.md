@@ -28,7 +28,7 @@ postgres, django 따로 업로드
 
 django 로컬 테스트
 
-`local.py`의 DATABASES 프로퍼티를 sqlite3로 적용 
+etc의 run_postgres.sh 실행 후 runserver
 
 (`DATABASES_SELECT` 항목 참조 요망)
 
