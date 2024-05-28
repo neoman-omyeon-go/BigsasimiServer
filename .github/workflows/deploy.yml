@@ -1,0 +1,27 @@
+name: Django CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+    REP_NAME: BigsasimiServer
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest # 실행될 인스턴스 OS와 버전
+
+    steps:
+      - name: excuting remote ssh commands
+        uses: appleboy/ssh-action@v1.0.3 # ssh 접속하는 오픈소스
+        with:
+          host: ${{ secrets.PUBLIC_IP }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: | 
+            cd ${{ env.REP_NAME }}
+            git pull
+            sh etc/startup.sh
