@@ -1,20 +1,20 @@
-***\*****#*****\*** ***\*****원클릭 배포 및 실행 방법*****\***
+# 원클릭 배포 및 실행 방법
 
-***\*****도커 컴포즈 활용*****\***
+**도커 컴포즈 활용**
 
 nginx + postgres + django(gunicorn) 패키징
 
-\```shell
+```shell
 
 git clone https://github.com/neoman-omyeon-go/BigsasimiServer.git
 
 docker compose up -d
 
-\```
+```
 
 <hr>
 
-***\*****일반 도커 활용*****\***
+**일반 도커 활용**
 
 postgres, django 따로 업로드
 
@@ -24,7 +24,7 @@ postgres, django 따로 업로드
 
 <hr>
 
-***\*****로컬 활용*****\***
+**로컬 활용**
 
 django 로컬 테스트
 
